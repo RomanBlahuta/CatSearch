@@ -4,7 +4,7 @@
   </div>
 
   <div class="main__tabs-wrapper">
-    <mat-tab-group color="primary" [(selectedIndex)]="activetab">
+    <mat-tab-group color="primary" [selectedIndex]="(activeTab$ | async)" (selectedTabChange)="onTabChange($event.index)">
       <mat-tab label="Images">
         <div class="main__content">
           <ng-container *ngIf="!(loading$ | async) && !(error$ | async)">
@@ -28,17 +28,29 @@
                 <form class="main__filters-container-form" [formGroup]="filtersForm" (ngSubmit)="applyFilters()">
                   <div class="main__filters-container-header">
                     <h2 class="main__filters-container-title">Search Filters</h2>
-                    <button [color]="'accent'" type="submit" mat-raised-button class="main__filters-container-form-submit">APPLY</button>
+                    <button [color]="'accent'" [disabled]="!filtersForm.valid" type="submit" mat-raised-button
+                            class="main__filters-container-form-submit">APPLY</button>
                   </div>
 
                   <mat-form-field>
                     <mat-label>Number of Images</mat-label>
                     <input matInput formControlName="imageNumber">
                   </mat-form-field>
+                  <div class="main__filters-container-form-error">
+                    <p class="main__filters-container-form-error-msg"
+                       *ngIf="filtersForm.controls[FilterFormFieldsEnum.IMAGE_NUMBER].hasError('isValidNumber')
+                       || filtersForm.controls[FilterFormFieldsEnum.IMAGE_NUMBER].hasError('required')">
+                      Enter a valid number that is more than 0.
+                    </p>
+                  </div>
 
-                  <mat-checkbox formControlName="selectAll" [indeterminate]="indeterminate" (change)="selectAll($event.checked)" class="main__filters-container-select-all">Select All</mat-checkbox>
+                  <mat-checkbox formControlName="selectAll" [indeterminate]="indeterminate"
+                                (change)="selectAll($event.checked)" class="main__filters-container-select-all">
+                    Select All
+                  </mat-checkbox>
                   <div class="main__filters-container-breeds" formArrayName="breeds">
-                    <mat-checkbox id="breed-{{ i }}" [formControlName]="i" class="main__filters-container-breeds-checkbox" *ngFor="let breed of breedsControls.controls; let i = index">
+                    <mat-checkbox id="breed-{{ i }}" [formControlName]="i" class="main__filters-container-breeds-checkbox"
+                                  *ngFor="let breed of breedsControls.controls; let i = index" (change)="selectBreed($event.checked)">
                       {{breeds[i].name}}
                     </mat-checkbox>
                   </div>

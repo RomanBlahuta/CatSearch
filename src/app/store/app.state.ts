@@ -2,13 +2,14 @@ import {Action, Selector, State, StateContext} from "@ngxs/store";
 import {ImgModel} from "../models/img.model";
 import {BreedModel} from "../models/breed.model";
 import {Injectable} from "@angular/core";
-import {BreedHttpActions, FilterInputActions, ImgHttpActions} from "./app.actions";
+import {BreedHttpActions, FilterInputActions, ImgHttpActions, TabActions} from "./app.actions";
 import {Observable, tap} from "rxjs";
 import {CatApiService} from "../services/cat-api.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {HttpErrorResponse} from "@angular/common/http";
 
 export interface AppStateModel {
+  activeTab: number;
   error: boolean;
   loading: boolean;
   images: ImgModel[];
@@ -18,6 +19,7 @@ export interface AppStateModel {
 }
 
 const initialState: AppStateModel = {
+  activeTab: 0,
   error: false,
   loading: false,
   images: [],
@@ -65,6 +67,11 @@ export class AppState {
   @Selector()
   static selectError(state: AppStateModel): boolean {
     return state.error;
+  }
+
+  @Selector()
+  static selectActiveTab(state: AppStateModel): number {
+    return state.activeTab;
   }
 
 
@@ -129,5 +136,9 @@ export class AppState {
     ctx.patchState({imgNumber: action.payload.imageNumber, selectedBreeds: action.payload.selectedBreeds});
     ctx.dispatch(new ImgHttpActions.LoadImages());
   }
-}
 
+  @Action(TabActions.NavigateTab)
+  navigateTab(ctx: StateContext<AppStateModel>, action: TabActions.NavigateTab): void {
+    ctx.patchState({activeTab: action.payload.index});
+  }
+}

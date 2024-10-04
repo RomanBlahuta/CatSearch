@@ -3,10 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {ImgModel} from "../models/img.model";
 import {BreedModel} from "../models/breed.model";
-
-
-const API_BASE: string = 'https://api.thecatapi.com/v1';
-const API_KEY: string = 'live_al1tRQ2Kn57Up4Y4lzoTDHXGJ9Y0swzRGwb1rR6G5TZRU4mSieABEYUadQorRdpK';
+import {API_BASE, API_KEY} from "../shared/utils";
 
 @Injectable({
   providedIn: 'root',

@@ -50,6 +50,20 @@
           font-size: 18px;
           font-weight: bold;
         }
+
+        &-error {
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: start;
+          margin-bottom: 24px;
+
+          &-msg {
+            font-size: 16px;
+            margin: 0;
+            color: red;
+          }
+        }
       }
 
       &-select-all {

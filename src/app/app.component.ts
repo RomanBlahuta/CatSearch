@@ -1,11 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from "@ngxs/store";
-import {BreedHttpActions, FilterInputActions, ImgHttpActions} from "./store/app.actions";
+import {BreedHttpActions, FilterInputActions, ImgHttpActions, TabActions} from "./store/app.actions";
 import {AppState} from "./store/app.state";
 import {Observable, Subject, takeUntil} from "rxjs";
 import {BreedModel} from "./models/breed.model";
-import {FormArray, FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ImgModel} from "./models/img.model";
+import {FilterFormFieldsEnum, isValidNumberValidator} from "./shared/utils";
 
 @Component({
   selector: 'app-root',
@@ -14,13 +15,14 @@ import {ImgModel} from "./models/img.model";
 })
 export class AppComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject();
-  public activetab = 0;
+  public activeTab$!: Observable<number>;
   public filtersForm!: FormGroup;
   public loading$!: Observable<boolean>;
   public error$!: Observable<boolean>;
   public images$!: Observable<ImgModel[]>;
   public imgNumber!: number;
   public breeds!: BreedModel[];
+  public FilterFormFieldsEnum = FilterFormFieldsEnum;
 
   constructor(private readonly store: Store, private formBuilder: FormBuilder) {
   }
@@ -29,11 +31,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.error$ = this.store.select(AppState.selectError);
     this.loading$ = this.store.select(AppState.selectLoading);
     this.images$ = this.store.select(AppState.selectImages);
+    this.activeTab$ = this.store.select(AppState.selectActiveTab);
 
     this.store.select(AppState.selectImageNumber).pipe(
       takeUntil(this.destroy$),
     ).subscribe(num => this.imgNumber = num);
-
 
     this.store.select(AppState.selectBreeds).pipe(
       takeUntil(this.destroy$),
@@ -43,9 +45,9 @@ export class AppComponent implements OnInit, OnDestroy {
     this.store.dispatch(new BreedHttpActions.LoadBreeds());
 
     this.filtersForm = this.formBuilder.group({
-      imageNumber: new FormControl(this.imgNumber),
-      selectAll: new FormControl(false),
-      breeds: new FormArray(this.breeds.map(breed => new FormControl(false)))
+      [FilterFormFieldsEnum.IMAGE_NUMBER]: new FormControl(this.imgNumber, [Validators.required, isValidNumberValidator()]),
+      [FilterFormFieldsEnum.SELECT_ALL]: new FormControl(false),
+      [FilterFormFieldsEnum.BREEDS]: new FormArray(this.breeds.map(breed => new FormControl(false)))
     });
   }
 
@@ -63,17 +65,23 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
+  public selectBreed(checked: boolean): void {
+    (this.breedsControls.controls.every(breed => breed.value)) ?
+      this.filtersForm.controls[FilterFormFieldsEnum.SELECT_ALL].setValue(true)
+      :
+      this.filtersForm.controls[FilterFormFieldsEnum.SELECT_ALL].setValue(false);
+  }
+
   public applyFilters(): void {
-    console.log(this.filtersForm.controls);
     this.store.dispatch(new FilterInputActions.ApplyFilters({
-      imageNumber: this.filtersForm.get('imageNumber')?.value,
+      imageNumber: this.filtersForm.get(FilterFormFieldsEnum.IMAGE_NUMBER)?.value,
       selectedBreeds: this.filterBreeds(),
     }));
-    this.activetab = 0;
+    this.store.dispatch(new TabActions.NavigateTab({index: 0}))
   }
 
   public get breedsControls() {
-    return this.filtersForm.get('breeds') as FormArray
+    return this.filtersForm.get(FilterFormFieldsEnum.BREEDS) as FormArray
   }
 
   public get indeterminate() {
@@ -88,5 +96,9 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     return result;
+  }
+
+  public onTabChange(index: number): void {
+    this.store.dispatch(new TabActions.NavigateTab({ index }));
   }
 }

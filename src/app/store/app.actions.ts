@@ -54,3 +54,13 @@ export namespace FilterInputActions {
     constructor(public payload: { imageNumber: number, selectedBreeds: BreedModel[] }) {}
   }
 }
+
+
+// TABS
+export namespace TabActions {
+  export class NavigateTab {
+    static readonly type: string = '[App] Navigate Tab';
+
+    constructor(public payload: { index: number }) {}
+  }
+}
