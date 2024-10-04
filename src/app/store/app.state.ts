@@ -2,7 +2,7 @@ import {Action, Selector, State, StateContext} from "@ngxs/store";
 import {ImgModel} from "../models/img.model";
 import {BreedModel} from "../models/breed.model";
 import {Injectable} from "@angular/core";
-import {BreedHttpActions, ImgHttpActions} from "./app.actions";
+import {BreedHttpActions, FilterInputActions, ImgHttpActions} from "./app.actions";
 import {Observable, tap} from "rxjs";
 import {CatApiService} from "../services/cat-api.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -37,32 +37,32 @@ export class AppState {
 
   // SELECTORS
   @Selector()
-  static getImages(state: AppStateModel): ImgModel[] {
+  static selectImages(state: AppStateModel): ImgModel[] {
     return state.images;
   }
 
   @Selector()
-  static getImageNumber(state: AppStateModel): number {
+  static selectImageNumber(state: AppStateModel): number {
     return state.imgNumber;
   }
 
   @Selector()
-  static getSelectedBreeds(state: AppStateModel): BreedModel[] {
+  static selectSelectedBreeds(state: AppStateModel): BreedModel[] {
     return state.selectedBreeds;
   }
 
   @Selector()
-  static getBreeds(state: AppStateModel): BreedModel[] {
+  static selectBreeds(state: AppStateModel): BreedModel[] {
     return state.breeds;
   }
 
   @Selector()
-  static getLoading(state: AppStateModel): boolean {
+  static selectLoading(state: AppStateModel): boolean {
     return state.loading;
   }
 
   @Selector()
-  static getError(state: AppStateModel): boolean {
+  static selectError(state: AppStateModel): boolean {
     return state.error;
   }
 
@@ -98,7 +98,7 @@ export class AppState {
 
   @Action(ImgHttpActions.LoadImages)
   loadImages(ctx: StateContext<AppStateModel>): Observable<ImgModel[]> {
-    ctx.patchState({loading: true});
+    ctx.patchState({loading: true, images: []});
 
     return this.apiService.getImages(ctx.getState().imgNumber, ctx.getState().selectedBreeds).pipe(
       tap({
@@ -121,5 +121,11 @@ export class AppState {
   loadImagesFailure(ctx: StateContext<AppStateModel>, action: ImgHttpActions.LoadImagesFailure): void {
     ctx.patchState({loading: false, error: true});
     this.snackBar.open(JSON.stringify(action.payload.error), 'OK');
+  }
+
+  @Action(FilterInputActions.ApplyFilters)
+  applyFilters(ctx: StateContext<AppStateModel>, action: FilterInputActions.ApplyFilters): void {
+    ctx.patchState({imgNumber: action.payload.imageNumber, selectedBreeds: action.payload.selectedBreeds});
+    ctx.dispatch(new ImgHttpActions.LoadImages());
   }
 }

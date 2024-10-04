@@ -1,30 +1,23 @@
 <div class="main">
   <div class="main__header">
     <h1 class="main__header-title">Cat Image Search</h1>
-<!--    <div class="main__header-filters">-->
-<!--      <button class="main__header-filters-btn" mat-stroked-button>Breeds</button>-->
-<!--    </div>-->
   </div>
 
   <div class="main__tabs-wrapper">
     <mat-tab-group color="primary" [(selectedIndex)]="activetab">
       <mat-tab label="Images">
         <div class="main__content">
-          <img class="main__content-img" src="../assets/img/bhu.jpg">
-          <img class="main__content-img" src="../assets/img/bhu.jpg">
-          <img class="main__content-img" src="../assets/img/bhu.jpg">
-          <img class="main__content-img" src="../assets/img/bhu.jpg">
-          <img class="main__content-img" src="../assets/img/bhu.jpg">
-          <img class="main__content-img" src="../assets/img/bhu.jpg">
-          <img class="main__content-img" src="../assets/img/bhu.jpg">
-          <img class="main__content-img" src="../assets/img/bhu.jpg">
-          <img class="main__content-img" src="../assets/img/bhu.jpg">
-          <img class="main__content-img" src="../assets/img/bhu.jpg">
-          <img class="main__content-img" src="../assets/img/bhu.jpg">
-          <img class="main__content-img" src="../assets/img/bhu.jpg">
-          <img class="main__content-img" src="../assets/img/bhu.jpg">
-          <img class="main__content-img" src="../assets/img/bhu.jpg">
-          <img class="main__content-img" src="../assets/img/bhu.jpg">
+          <ng-container *ngIf="!(loading$ | async) && !(error$ | async)">
+            <img alt="Loading..." class="main__content-img" [src]="image.url" *ngFor="let image of (images$ | async)">
+          </ng-container>
+
+          <div class="main__content-loader" *ngIf="(loading$ | async)">
+            <mat-spinner [diameter]="100" color="accent"></mat-spinner>
+          </div>
+
+          <div class="main__content-empty" *ngIf="!(loading$ | async) && ((error$ | async) || breeds.length === 0)">
+            <h2 class="main__content-empty-title">No Results :(</h2>
+          </div>
         </div>
       </mat-tab>
       <mat-tab label="Filters">
@@ -34,13 +27,23 @@
               <div class="main__filters-container">
                 <h2 class="main__filters-container-title">Search Filters</h2>
 
-                <mat-form-field>
-                  <mat-label>Number of Images</mat-label>
-                  <input matInput>
-                </mat-form-field>
+                <form class="main__filters-container-form" [formGroup]="filtersForm" (ngSubmit)="applyFilters()">
+                  <mat-form-field>
+                    <mat-label>Number of Images</mat-label>
+                    <input matInput formControlName="imageNumber">
+                  </mat-form-field>
 
-                <mat-checkbox class="main__filters-container-select-all">Select All</mat-checkbox>
+                  <mat-checkbox formControlName="selectAll" [indeterminate]="indeterminate" (change)="selectAll($event.checked)" class="main__filters-container-select-all">Select All</mat-checkbox>
+                  <div class="main__filters-container-breeds" formArrayName="breeds">
+                    <mat-checkbox id="breed-{{ i }}" [formControlName]="i" class="main__filters-container-breeds-checkbox" *ngFor="let breed of breedsControls.controls; let i = index">
+                      {{breeds[i].name}}
+                    </mat-checkbox>
+                  </div>
 
+                  <div class="main__filters-container-form-submit-wrapper">
+                    <button [color]="'accent'" type="submit" mat-raised-button class="main__filters-container-form-submit">APPLY</button>
+                  </div>
+                </form>
 
               </div>
             </mat-card-content>

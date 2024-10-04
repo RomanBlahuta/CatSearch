@@ -23,17 +23,51 @@
   }
 
   &__filters {
-    height: calc(100vh - 210px);
+    height: calc(100vh - 184px);
+    overflow-y: scroll;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: start;
 
     &-container {
       width: 75vw;
-      height: calc(75vh - 210px);
       background-color: white;
       border-radius: 4px;
       padding: 24px;
+
+      &-form {
+        &-submit {
+          margin: 36px 0 12px 0;
+          width: 182px;
+          padding: 4px;
+          height: 64px;
+          font-size: 24px;
+          font-weight: bold;
+
+          &-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+        }
+      }
+
+      &-select-all {
+        font-weight: bold !important;
+        margin-bottom: 24px;
+      }
+
+      &-breeds {
+        display: flex;
+        justify-content: start;
+        align-items: start;
+        flex-wrap: wrap;
+        width: 100%;
+
+        &-checkbox {
+          flex: 0 1 20%;
+        }
+      }
 
       &-title {
         font-size: 32px;
@@ -45,12 +79,38 @@
 
   &__content {
     padding: 16px 16px 0 16px;
-    height: calc(100vh - 210px);
+    height: calc(100vh - 184px);
     overflow-y: scroll;
     display: flex;
     justify-content: center;
-    align-items: start;
+    align-items: center;
     flex-flow: row wrap;
+
+    &-empty {
+      background-color: white;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+      border-radius: 6px;
+      width: 75%;
+      height: 75%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &-title {
+        font-size: 48px;
+      }
+    }
+
+    &-loader {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 300px;
+      width: 300px;
+      background-color: white;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+      border-radius: 6px;
+    }
 
     &-img {
       flex: 0 1 calc(20% - 32px);
@@ -58,6 +118,7 @@
       background-color: #DCB184;
       margin: 16px 16px 24px 16px;
       display: inline-block;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     }
   }
 }
@@ -83,6 +144,7 @@ mat-card {
   //background-color: #4F3328;
   border: solid 4px #4F3328;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  margin: 36px 0;
 }
 
 mat-form-field {

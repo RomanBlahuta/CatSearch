@@ -14,6 +14,9 @@ import {MatInput} from "@angular/material/input";
 import {AppState} from "./store/app.state";
 import {HttpClientModule} from "@angular/common/http";
 import {MatCheckbox} from "@angular/material/checkbox";
+import { ReactiveFormsModule } from '@angular/forms';
+import {NgOptimizedImage} from "@angular/common";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
 
 @NgModule({
   declarations: [
@@ -21,6 +24,7 @@ import {MatCheckbox} from "@angular/material/checkbox";
   ],
   imports: [
     HttpClientModule,
+    ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
     NgxsModule.forRoot([AppState], {developmentMode: /** !environment.production */ false}),
@@ -35,6 +39,8 @@ import {MatCheckbox} from "@angular/material/checkbox";
     MatInput,
     MatFormField,
     MatCheckbox,
+    NgOptimizedImage,
+    MatProgressSpinner,
   ],
   providers: [
     provideClientHydration(),

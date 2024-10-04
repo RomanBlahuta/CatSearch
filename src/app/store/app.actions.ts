@@ -47,21 +47,9 @@ export namespace ImgHttpActions {
 
 // FILTER INPUT
 export namespace FilterInputActions {
-  export class EnterImageNumber {
-    static readonly type: string = '[App] Enter Image Number';
+  export class ApplyFilters {
+    static readonly type: string = '[App] Apply Filters';
 
-    constructor(public payload: { a: string }) {}
-  }
-
-  export class SelectBreed {
-    static readonly type: string = '[App] Select Breed';
-
-    constructor(public payload: { a: string }) {}
-  }
-
-  export class ToggleAllBreeds {
-    static readonly type: string = '[App] Toggle All Breeds';
-
-    constructor(public payload: { a: string }) {}
+    constructor(public payload: { imageNumber: number, selectedBreeds: BreedModel[] }) {}
   }
 }
