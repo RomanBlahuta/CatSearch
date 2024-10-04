@@ -1,5 +1,6 @@
 import {BreedModel} from "../models/breed.model";
 import {ImgModel} from "../models/img.model";
+import {HttpErrorResponse} from "@angular/common/http";
 
 // BREEDS HTTP
 export namespace BreedHttpActions {
@@ -18,7 +19,7 @@ export namespace BreedHttpActions {
   export class LoadBreedsFailure {
     static readonly type: string = '[App] Load Breeds Failure';
 
-    constructor(public payload: { error: unknown }) {}
+    constructor(public payload: { error: HttpErrorResponse }) {}
   }
 }
 
@@ -40,7 +41,7 @@ export namespace ImgHttpActions {
   export class LoadImagesFailure {
     static readonly type: string = '[App] Load Images Failure';
 
-    constructor(public payload: { error: unknown }) {}
+    constructor(public payload: { error: HttpErrorResponse }) {}
   }
 }
 

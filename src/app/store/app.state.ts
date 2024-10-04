@@ -6,6 +6,7 @@ import {BreedHttpActions, FilterInputActions, ImgHttpActions} from "./app.action
 import {Observable, tap} from "rxjs";
 import {CatApiService} from "../services/cat-api.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {HttpErrorResponse} from "@angular/common/http";
 
 export interface AppStateModel {
   error: boolean;
@@ -78,7 +79,7 @@ export class AppState {
         next: (response: BreedModel[]) => {
           ctx.dispatch(new BreedHttpActions.LoadBreedsSuccess({response}))
         },
-        error: (error: unknown) => {
+        error: (error: HttpErrorResponse) => {
           ctx.dispatch(new BreedHttpActions.LoadBreedsFailure({error}))
         },
       }),
@@ -93,7 +94,7 @@ export class AppState {
   @Action(BreedHttpActions.LoadBreedsFailure)
   loadBreedsFailure(ctx: StateContext<AppStateModel>, action: BreedHttpActions.LoadBreedsFailure): void {
     ctx.patchState({loading: false, error: true});
-    this.snackBar.open(JSON.stringify(action.payload.error), 'OK');
+    this.snackBar.open(action.payload.error.message, 'OK');
   }
 
   @Action(ImgHttpActions.LoadImages)
@@ -105,7 +106,7 @@ export class AppState {
         next: (response: ImgModel[]) => {
           ctx.dispatch(new ImgHttpActions.LoadImagesSuccess({response}))
         },
-        error: (error: unknown) => {
+        error: (error: HttpErrorResponse) => {
           ctx.dispatch(new ImgHttpActions.LoadImagesFailure({error}))
         },
       }),
@@ -120,7 +121,7 @@ export class AppState {
   @Action(ImgHttpActions.LoadImagesFailure)
   loadImagesFailure(ctx: StateContext<AppStateModel>, action: ImgHttpActions.LoadImagesFailure): void {
     ctx.patchState({loading: false, error: true});
-    this.snackBar.open(JSON.stringify(action.payload.error), 'OK');
+    this.snackBar.open(action.payload.error.message, 'OK');
   }
 
   @Action(FilterInputActions.ApplyFilters)
@@ -129,3 +130,4 @@ export class AppState {
     ctx.dispatch(new ImgHttpActions.LoadImages());
   }
 }
+

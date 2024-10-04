@@ -14,11 +14,8 @@ import {ImgModel} from "./models/img.model";
 })
 export class AppComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject();
-
-  public title = 'cat-search';
   public activetab = 0;
   public filtersForm!: FormGroup;
-
   public loading$!: Observable<boolean>;
   public error$!: Observable<boolean>;
   public images$!: Observable<ImgModel[]>;

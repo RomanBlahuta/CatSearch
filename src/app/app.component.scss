@@ -35,20 +35,20 @@
       border-radius: 4px;
       padding: 24px;
 
+      &-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 32px;
+      }
+
       &-form {
         &-submit {
-          margin: 36px 0 12px 0;
-          width: 182px;
+          width: 148px;
           padding: 4px;
-          height: 64px;
-          font-size: 24px;
+          height: 48px;
+          font-size: 18px;
           font-weight: bold;
-
-          &-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
         }
       }
 
@@ -72,7 +72,7 @@
       &-title {
         font-size: 32px;
         font-weight: bolder;
-        margin-bottom: 32px;
+        margin: 0;
       }
     }
   }
@@ -141,7 +141,6 @@ mat-tab-body {
 }
 
 mat-card {
-  //background-color: #4F3328;
   border: solid 4px #4F3328;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
   margin: 36px 0;

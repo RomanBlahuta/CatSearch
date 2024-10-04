@@ -25,9 +25,12 @@
           <mat-card appearance="outlined">
             <mat-card-content>
               <div class="main__filters-container">
-                <h2 class="main__filters-container-title">Search Filters</h2>
-
                 <form class="main__filters-container-form" [formGroup]="filtersForm" (ngSubmit)="applyFilters()">
+                  <div class="main__filters-container-header">
+                    <h2 class="main__filters-container-title">Search Filters</h2>
+                    <button [color]="'accent'" type="submit" mat-raised-button class="main__filters-container-form-submit">APPLY</button>
+                  </div>
+
                   <mat-form-field>
                     <mat-label>Number of Images</mat-label>
                     <input matInput formControlName="imageNumber">
@@ -38,10 +41,6 @@
                     <mat-checkbox id="breed-{{ i }}" [formControlName]="i" class="main__filters-container-breeds-checkbox" *ngFor="let breed of breedsControls.controls; let i = index">
                       {{breeds[i].name}}
                     </mat-checkbox>
-                  </div>
-
-                  <div class="main__filters-container-form-submit-wrapper">
-                    <button [color]="'accent'" type="submit" mat-raised-button class="main__filters-container-form-submit">APPLY</button>
                   </div>
                 </form>
 
